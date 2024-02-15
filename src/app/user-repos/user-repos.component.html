@@ -1,0 +1,31 @@
+<app-search-repo
+  (onRepoSearched)="handleRepoSearched($event)"
+></app-search-repo>
+
+<div *ngIf="fetchingRepos">
+  <app-loader [text]="'Loading Repos...'"></app-loader>
+</div>
+
+<div *ngIf="userRepos && userRepos.total_count > 0">
+  <div class="mb-4 flex flex-col gap-4 md:grid md:grid-cols-2">
+    <app-user-repo
+      *ngFor="let repo of userRepos.items"
+      [repo]="repo"
+    ></app-user-repo>
+  </div>
+
+  <app-pagination
+    (saveCustomizedChanges)="handleCustomizedChanges($event)"
+    (goToPage)="handlePageChanged($event)"
+    [totalData]="userRepos.total_count"
+    [maxPages]="maxPages"
+    [maxPerPage]="maxPerPage"
+    [currentPage]="currentPage"
+  ></app-pagination>
+</div>
+
+<div *ngIf="!userRepos?.total_count && !fetchingRepos">
+  <app-error [text]="'Could not find repos :('"></app-error>
+</div>
+
+<app-navigate-page></app-navigate-page>
